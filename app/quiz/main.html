@@ -1,115 +1,176 @@
 ﻿<div ng-controller="QuizController as vm">
 
-    <!--page loading view-->
-    <div class="div6" ng-show="vm.showPageIsLoading">
-        Page is loading...
+    <!--start page-->
+    <div class="div6" ng-show="vm.showStartPage">
+       <div>WELCOME TO QUIZ CENTER</div>
+       <div>
+           <table>
+               <tr>
+                   <td><button class="btn btn-primary btn1" ng-click="vm.MakeQuizClick()">Make a Quiz</button></td>
+                   <td><button class="btn btn-primary btn1" ng-click="vm.TakeQuizClick()">Take a Quiz</button></td>
+               </tr>
+           </table>
+       </div>
     </div>
 
-    <!--quiz list-->
-    <div class="div1" ng-show="vm.showQuizList">
+    <!--Make a Quiz Section-->
+    <div>
+        
+        <!--page loading view-->
+        <div class="div6" ng-show="vm.showPageIsLoading">
+            Page is loading...
+        </div>
 
-        <label class="label3">Quizes</label>
+        <!--make mode - quiz list-->
+        <div class="div1" ng-show="vm.showMakeQuizList">
 
-        <table class="table">
-            <tr ng-repeat="quiz in vm.quizList">
-                <td><div class="div3">{{quiz.name}}</div></td>
-                <td><button class="btn btn-primary btn1" ng-click="vm.UpdateQuiz(quiz)">update</button></td>
-                <td><button class="btn btn-primary btn1" ng-click="vm.DeleteQuiz(quiz.id)">delete</button></td>
-            </tr>
-        </table>
+            <label class="label3">Quizes</label>
 
-
-        <button class="btn btn-success btn1" ng-click="vm.goToCreateQuizPage()">Create Quiz</button>
-    </div>
-
-    <!--create quiz-->
-    <div class="div7" ng-show="vm.showCreateQuiz">
-
-        <table>
-            <tr>
-                <td><label class="label3">Quiz Name:</label></td>
-                <td><textarea class="textArea1" ng-model="vm.quiz.name"></textarea></td>
-
-            </tr>
-
-            <tr>
-                <td><button class="btn btn-primary btn1" ng-click="vm.createQuiz()">Save</button></td>
-            </tr>
-        </table>
-
-    </div> <!--end of the create quiz-->
-    <!--question list-->
-    <div class="div4" ng-show="vm.showQuestionList">
-
-        <div class="div2">Quiz:<label class="label1">{{vm.quiz.name}}</label></div>
+            <table class="table">
+                <tr ng-repeat="quiz in vm.quizList">
+                    <td><div class="div3">{{quiz.name}}</div></td>
+                    <td><button class="btn btn-primary btn1" ng-click="vm.UpdateQuiz(quiz)">update</button></td>
+                    <td><button class="btn btn-primary btn1" ng-click="vm.DeleteQuiz(quiz.id)">delete</button></td>
+                </tr>
+            </table>
 
 
-        <table class="table">
-            <tr><td><label class="label2">Questions:</label></td></tr>
-            <tr ng-repeat="question in vm.questions">
-                <td><div class="div3">{{question.text}}</div></td>
-                <td><button class="btn btn-primary btn1" ng-click="vm.UpdateQuestion(question)">update</button></td>
+            <button class="btn btn-success btn1" ng-click="vm.goToCreateQuizPage()">Create Quiz</button>
+        </div>
 
-            </tr>
-        </table>
+        <!--create quiz-->
+        <div class="div7" ng-show="vm.showCreateQuiz">
 
-        <button class="btn btn-success btn1" ng-click="vm.goToAddNewQuestion()">Add new Question</button>
+            <table>
+                <tr>
+                    <td><label class="label3">Quiz Name:</label></td>
+                    <td><textarea class="textArea1" ng-model="vm.quiz.name"></textarea></td>
 
-    </div> <!--end of the question list-->
-    <!--add new question-->
-    <div class="div7" ng-show="vm.showAddNewQuestion">
+                </tr>
 
-        <table>
-            <tr>
-                <td><label class="label3">Question:</label></td>
-                <td><textarea class="textArea1" ng-model="vm.question.text"></textarea></td>
+                <tr>
+                    <td><button class="btn btn-primary btn1" ng-click="vm.createQuiz()">Save</button></td>
+                </tr>
+            </table>
 
-            </tr>
+        </div> <!--end of the create quiz-->
+        <!--question list-->
 
-            <tr>
+        <div class="div4" ng-show="vm.showQuestionList">
 
-                <td><button class="btn btn-primary btn1" ng-click="vm.AddNewQuestion()">Save</button></td>
-            </tr>
-        </table>
-
-    </div> <!--end of the add new question-->
-    <!--answer list-->
-    <div class="div5" ng-show="vm.showAnswerList">
-
-        <div class="div2">Quiz:<label class="label1">{{vm.quiz.name}}</label></div>
-        <div class="div2">Question:<label class="label1">{{vm.question.text}}</label></div>
-
-        <table class="table">
-            <tr><td><label class="label2">Answers:</label></td></tr>
-            <tr ng-repeat="answer in vm.answers">
-                <td><div class="div3">{{answer.text}}</div></td>
+            <div class="div2">Quiz:<label class="label1">{{vm.quiz.name}}</label></div>
 
 
-            </tr>
-        </table>
+            <table class="table">
+                <tr><td><label class="label2">Questions:</label></td></tr>
+                <tr ng-repeat="question in vm.questions">
+                    <td><div class="div3">{{question.text}}</div></td>
+                    <td><button class="btn btn-primary btn1" ng-click="vm.UpdateQuestion(question)">update</button></td>
 
-        <button class="btn btn-success btn1" ng-click="vm.goToAddNewAnswer()">Add new Answer</button>
+                </tr>
+            </table>
 
-    </div> <!--end of the question list-->
-    <!--add new answer-->
-    <div class="div7" ng-show="vm.showAddNewAnswer">
+            <button class="btn btn-success btn1" ng-click="vm.goToAddNewQuestion()">Add new Question</button>
 
-        <table class="table">
-            <tr>
-                <td><label class="label3">Answer:</label></td>
-                <td><textarea class="textArea1" ng-model="vm.answer.text"></textarea></td>
+        </div> <!--end of the question list-->
+        <!--add new question-->
 
-                <td><label class="label4" for="isCorrectAnswer">Is Correct Answer</label><input type="checkbox" id="isCorrectAnswer" ng-model="vm.answer.isCorrectAnswer" /></td>
-            </tr>
+        <div class="div7" ng-show="vm.showAddNewQuestion">
 
-            <tr>
-                <td><button class="btn btn-primary btn1" ng-click="vm.AddNewAnswer()">Save</button></td>
-            </tr>
-        </table>
+            <table>
+                <tr>
+                    <td><label class="label3">Question:</label></td>
+                    <td><textarea class="textArea1" ng-model="vm.question.text"></textarea></td>
 
-    </div> <!--end of the add new question-->
+                </tr>
+
+                <tr>
+
+                    <td><button class="btn btn-primary btn1" ng-click="vm.AddNewQuestion()">Save</button></td>
+                </tr>
+            </table>
+
+        </div> <!--end of the add new question-->
+        <!--answer list-->
+        
+        <div class="div5" ng-show="vm.showAnswerList">
+
+            <div class="div2">Quiz:<label class="label1">{{vm.quiz.name}}</label></div>
+            <div class="div2">Question:<label class="label1">{{vm.question.text}}</label></div>
+
+            <table class="table">
+                <tr><td><label class="label2">Answers:</label></td></tr>
+                <tr ng-repeat="answer in vm.answers">
+                    <td><div class="div3">{{answer.text}}</div></td>
+
+
+                </tr>
+            </table>
+
+            <button class="btn btn-success btn1" ng-click="vm.goToAddNewAnswer()">Add new Answer</button>
+
+        </div> <!--end of the question list-->
+        
+        <!--add new answer-->
+        <div class="div7" ng-show="vm.showAddNewAnswer">
+
+            <table class="table">
+                <tr>
+                    <td><label class="label3">Answer:</label></td>
+                    <td><textarea class="textArea1" ng-model="vm.answer.text"></textarea></td>
+
+                    <td><label class="label4" for="isCorrectAnswer">Is Correct Answer</label><input type="checkbox" id="isCorrectAnswer" ng-model="vm.answer.isCorrectAnswer" /></td>
+                </tr>
+
+                <tr>
+                    <td><button class="btn btn-primary btn1" ng-click="vm.AddNewAnswer()">Save</button></td>
+                </tr>
+            </table>
+
+        </div> <!--end of the add new question--> 
+
+    </div> <!--end of the Make a Quiz Section-->
+
+
+    <!--Take a Quiz Section-->
+    <div>
+
+        <!--take mode -quiz list-->
+        <div class="div1" ng-show="vm.showTakeQuizList">
+
+            <label class="label3">Quizes</label>
+
+            <table class="table">
+                <tr ng-repeat="quiz in vm.quizList">
+                    <td><div class="div3">{{quiz.name}}</div></td>
+                    <td><button class="btn btn-primary btn1" ng-click="vm.StartQuiz(quiz)">Start this quiz </button></td>
+                </tr>
+            </table>
+        </div>
+
+
+        <!--take mode - quiz main page-->
+        <div class="div7" ng-show="vm.showQuizMainPage">
+
+            <div class="div8">
+
+                <label class="textArea2">{{vm.question.text}}</label>
+
+            </div>
+
+            <div class="div9">
+
+                ANSWERS...
+
+            </div>
 
 
 
+        </div> <!--end of the quiz main page-->
 
+    </div> <!--end of the Take a Quiz Section-->
+
+
+    
+  
 </div> <!--end of the main div tag-->

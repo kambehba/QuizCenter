@@ -8,16 +8,57 @@
     function QuizController($scope, firebaseDataService) {
 
         var vm = this;
+        var appMode = "";
+        var currentQuestionNumber = 0;
+        var questionIds = [];
         hideAllPageSection();
-        vm.showPageIsLoading = true;
+        vm.showStartPage = true;
         vm.quizList = [];
         vm.quiz = { id: 0, name: "" };
         vm.question = { id: 0, text: "", quizId: 0 };
         vm.questions = [];
         vm.answer = { id: 0, text: "", isCorrectAnswer: "", questionId: 0 };
         vm.answers = [];
+        
+      
+        ///***view model methods***///
 
-        loadAllQuizez();
+        vm.MakeQuizClick = function () {
+            appMode = "Take";
+            hideAllPageSection();
+            vm.showPageIsLoading = true;
+            loadAllQuizez(appMode);
+        }
+
+        vm.TakeQuizClick = function () {
+            appMode = "Make";
+            hideAllPageSection();
+            vm.showTakeQuizList = true;
+            loadAllQuizez(appMode);
+           
+        }
+
+        vm.StartQuiz = function (quiz) {
+            hideAllPageSection();
+            vm.showQuizMainPage = true;
+
+            firebaseDataService.getQuestionIdsByQuizId(quiz.id).then(function (promise) {
+                questionIds = promise;
+                loadQuestion();
+
+            });
+
+
+
+            firebaseDataService.getQuestionsByQuizId(quiz.id).then(function (promise) {
+                vm.quiz.id = quiz.id;
+                vm.questions = promise;
+
+
+            });
+
+
+        }
 
         vm.goToCreateQuizPage = function () {
             hideAllPageSection();
@@ -27,9 +68,9 @@
 
         vm.createQuiz = function () {
             hideAllPageSection();
-            vm.showQuizList = true;
+            vm.showMakeQuizList = true;
             firebaseDataService.addQuiz(vm.quiz).then(function (promise) {
-                loadAllQuizez();
+                loadAllQuizez(appMode);
             });
         }
 
@@ -87,13 +128,15 @@
         }
 
 
-        //private methods
+        ///***private methods***///
 
-        function loadAllQuizez() {
+        function loadAllQuizez(appMode) {
             firebaseDataService.getAllQuizes().then(function (promise) {
                 vm.quizList = promise;
                 hideAllPageSection();
-                vm.showQuizList = true;
+                if (appMode == "Take") vm.showMakeQuizList = true;
+                if (appMode == "Make") vm.showTakeQuizList = true;
+               
             });
         }
 
@@ -110,14 +153,39 @@
         }
 
         function hideAllPageSection() {
+            vm.showStartPage = false;
             vm.showCreateQuiz = false;
             vm.showQuestionList = false;
             vm.showAddNewAnswer = false;
             vm.showAnswerList = false;
-            vm.showQuizList = false;
+            vm.showMakeQuizList = false;
             vm.showAddNewQuestion = false;
             vm.showPageIsLoading = false;
+            vm.showTakeQuizList = false;
+            vm.showQuizMainPage = false;
 
+        }
+
+        function loadQuestion() {
+
+            if (currentQuestionNumber < questionIds.length) {
+                var questionId = questionIds[currentQuestionNumber];
+
+                firebaseDataService.getQuestionById(vm.quiz.id, questionId).then(function (promise) {
+                    vm.question = promise;
+                    currentQuestionNumber += 1;
+                    loadAnswersByQuestionId(questionId);
+
+                });
+
+            }
+        }
+
+        function loadAnswersByQuestionId(questionId) {
+            firebaseDataService.getAnswersByQuestionId(vm.quiz.id, questionId).then(function (promise) {
+                vm.answers = promise;
+
+            });
         }
 
 

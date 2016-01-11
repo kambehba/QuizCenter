@@ -20,8 +20,11 @@
         /*****service API******/
         return ({
             getAllQuizes: getAllQuizes,
+            getQuestionIdsByQuizId:getQuestionIdsByQuizId,
             getQuestionByQuizId: getQuestionByQuizId,
             getAnswersByQuestionId: getAnswersByQuestionId,
+            getQuestionsByQuizId: getQuestionsByQuizId,
+            getQuestionById: getQuestionById,
             addQuiz: addQuiz,
             addQuestion: addQuestion,
             addAnswer: addAnswer,
@@ -38,6 +41,48 @@
             quizResource.once('value', function (snapshot) {
                 promise = snapshot.val();
                 deferred.resolve(promise);
+            });
+            return (deferred.promise);
+        }
+
+        function getQuestionById(quizId, questionId) {
+            var questionsRef = new Firebase('https://dazzling-torch-8270.firebaseio.com/QuizCenter/quizes/' + quizId + '/questions/' + questionId);
+
+            var promise = [];
+            var deferred = $q.defer();
+            questionsRef.once('value', function (snapshot) {
+                promise = snapshot.val();
+                deferred.resolve(promise);
+
+            });
+            return (deferred.promise);
+        }
+
+        function getQuestionsByQuizId(quizId) {
+            var questionsRef = new Firebase('https://dazzling-torch-8270.firebaseio.com/QuizCenter/quizes/' + quizId + '/questions');
+            var questionIdsRef = new Firebase('https://dazzling-torch-8270.firebaseio.com/QuizCenter/quizes/' + quizId + '/questions/ids');
+
+            var promise = [];
+            var w = new Array();
+            var deferred = $q.defer();
+            questionsRef.once('value', function (snapshot) {
+                promise = snapshot.val();
+                snapshot.forEach(function (childSnapshot) { w.push(childSnapshot.key()); });
+                deferred.resolve(w);
+                //deferred.resolve(promise);
+            });
+            return (deferred.promise);
+        }
+
+        function getQuestionIdsByQuizId(quizId) {
+            var questionsRef = new Firebase('https://dazzling-torch-8270.firebaseio.com/QuizCenter/quizes/' + quizId + '/questions');
+
+            var promise = new Array();
+            var deferred = $q.defer();
+            questionsRef.once('value', function (snapshot) {
+                snapshot.forEach(function (childSnapshot) { promise.push(childSnapshot.key()); });
+                deferred.resolve(promise);
+
             });
             return (deferred.promise);
         }
