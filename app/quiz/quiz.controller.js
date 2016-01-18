@@ -11,6 +11,9 @@
         var appMode = "";
         var currentQuestionNumber = 0;
         var questionIds = [];
+        var answersIds = [];
+        var isSelectedAnswerCorrect = false;
+        var numberOfCorrectlyAnswerd = 0;
         hideAllPageSection();
         vm.showStartPage = true;
         vm.quizList = [];
@@ -19,7 +22,16 @@
         vm.questions = [];
         vm.answer = { id: 0, text: "", isCorrectAnswer: "", questionId: 0 };
         vm.answers = [];
-        
+        vm.answer1 = "";
+        vm.answer2 = "";
+        vm.answer3 = "";
+        vm.answer4 = "";
+        vm.answer1BtnStyle = 0;
+        vm.answer2BtnStyle = 0;
+        vm.answer3BtnStyle = 0;
+        vm.answer4BtnStyle = 0;
+        vm.nextButtonText = "Next";
+
       
         ///***view model methods***///
 
@@ -40,24 +52,41 @@
 
         vm.StartQuiz = function (quiz) {
             hideAllPageSection();
-            vm.showQuizMainPage = true;
-
+            
             firebaseDataService.getQuestionIdsByQuizId(quiz.id).then(function (promise) {
                 questionIds = promise;
                 loadQuestion();
 
             });
 
-
-
             firebaseDataService.getQuestionsByQuizId(quiz.id).then(function (promise) {
                 vm.quiz.id = quiz.id;
                 vm.questions = promise;
-
-
             });
+        }
 
+        vm.answer1Clicked = function () {
+            UnselectAllAnswerButtons();
+            vm.answer1BtnStyle = 1;
+            isSelectedAnswerCorrect = vm.answers[answersIds[0]].isCorrectAnswer;
+        }
 
+        vm.answer2Clicked = function () {
+            UnselectAllAnswerButtons();
+            vm.answer2BtnStyle = 1;
+            isSelectedAnswerCorrect = vm.answers[answersIds[1]].isCorrectAnswer;
+        }
+
+        vm.answer3Clicked = function () {
+            UnselectAllAnswerButtons();
+            vm.answer3BtnStyle = 1;
+            isSelectedAnswerCorrect = vm.answers[answersIds[2]].isCorrectAnswer;
+        }
+
+        vm.answer4Clicked = function () {
+            UnselectAllAnswerButtons();
+            vm.answer4BtnStyle = 1;
+            isSelectedAnswerCorrect = vm.answers[answersIds[3]].isCorrectAnswer;
         }
 
         vm.goToCreateQuizPage = function () {
@@ -127,6 +156,21 @@
             });
         }
 
+        vm.nextBtnClick = function () {
+            UnselectAllAnswerButtons();
+            hideAllPageSection();
+            if (isSelectedAnswerCorrect == true) {
+                isSelectedAnswerCorrect = false;
+                numberOfCorrectlyAnswerd++;
+            }
+
+            if (vm.nextButtonText == "Finish") { showQuizResult(); return; }
+            
+            if (IsLastQuestion()) { vm.nextButtonText = "Finish"; }
+
+            loadQuestion();
+        }
+
 
         ///***private methods***///
 
@@ -163,6 +207,7 @@
             vm.showPageIsLoading = false;
             vm.showTakeQuizList = false;
             vm.showQuizMainPage = false;
+            vm.showQuizResult = false;
 
         }
 
@@ -182,11 +227,47 @@
         }
 
         function loadAnswersByQuestionId(questionId) {
+
             firebaseDataService.getAnswersByQuestionId(vm.quiz.id, questionId).then(function (promise) {
                 vm.answers = promise;
-
+                bindAnswers(questionId);
             });
         }
+
+        function bindAnswers(questionId) {
+            firebaseDataService.getAnswerIds(vm.quiz.id, questionId).then(function (promise) {
+                answersIds = promise;
+
+                vm.answer1 = vm.answers[answersIds[0]].text;
+                vm.answer2 = vm.answers[answersIds[1]].text;
+                vm.answer3 = vm.answers[answersIds[2]].text;
+                vm.answer4 = vm.answers[answersIds[3]].text;
+
+                vm.showQuizMainPage = true;
+            });
+        }
+
+        function UnselectAllAnswerButtons() {
+            vm.answer1BtnStyle = 0;
+            vm.answer2BtnStyle = 0;
+            vm.answer3BtnStyle = 0;
+            vm.answer4BtnStyle = 0;
+        }
+
+        function IsLastQuestion() {
+            if(currentQuestionNumber == questionIds.length-1)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        function showQuizResult() {
+            hideAllPageSection();
+            vm.quizResult = (numberOfCorrectlyAnswerd * 100) / questionIds.length
+            vm.showQuizResult = true;
+        }
+        
 
 
 

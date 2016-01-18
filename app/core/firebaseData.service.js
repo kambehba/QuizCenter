@@ -24,6 +24,7 @@
             getQuestionByQuizId: getQuestionByQuizId,
             getAnswersByQuestionId: getAnswersByQuestionId,
             getQuestionsByQuizId: getQuestionsByQuizId,
+            getAnswerIds:getAnswerIds,
             getQuestionById: getQuestionById,
             addQuiz: addQuiz,
             addQuestion: addQuestion,
@@ -54,6 +55,21 @@
                 promise = snapshot.val();
                 deferred.resolve(promise);
 
+            });
+            return (deferred.promise);
+        }
+
+        function getAnswerIds(quizId, questionId) {
+            var answersRef = new Firebase('https://dazzling-torch-8270.firebaseio.com/QuizCenter/quizes/' + quizId + '/questions/' + questionId +'/answers');
+
+            var promise = [];
+            var w = new Array();
+            var deferred = $q.defer();
+            answersRef.once('value', function (snapshot) {
+                promise = snapshot.val();
+                snapshot.forEach(function (childSnapshot) { w.push(childSnapshot.key()); });
+                deferred.resolve(w);
+                //deferred.resolve(promise);
             });
             return (deferred.promise);
         }
@@ -103,8 +119,8 @@
             getNextAvilableId("quiz").then(
                     function (promise) {
                         var id = promise.value;
-                        var newItemRef = new Firebase('https://dazzling-torch-8270.firebaseio.com/QuizCenter/quizes/' + 'i' + id);
-                        newItemRef.set({ id: 'i' + id, name: quiz.name, questions: [] });
+                        var newItemRef = new Firebase('https://dazzling-torch-8270.firebaseio.com/QuizCenter/quizes/' + id);
+                        newItemRef.set({ id:id, name: quiz.name, questions: [] });
 
                         //var promise = [];
                         //var deferred = $q.defer();
@@ -131,8 +147,8 @@
             getNextAvilableId("question").then(
                     function (promise) {
                         var id = promise.value;
-                        var newItemRef = new Firebase('https://dazzling-torch-8270.firebaseio.com/QuizCenter/quizes/' + quizId + '/' + 'questions/' + 'i' + id);
-                        newItemRef.set({ id: 'i' + id, text: question });
+                        var newItemRef = new Firebase('https://dazzling-torch-8270.firebaseio.com/QuizCenter/quizes/' + quizId + '/' + 'questions/' + id);
+                        newItemRef.set({ id:id, text: question });
                     }
                 );
             var questionRef = new Firebase('https://dazzling-torch-8270.firebaseio.com/QuizCenter/quizes/' + quizId + '/questions');

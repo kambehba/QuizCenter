@@ -13,6 +13,7 @@
        </div>
     </div>
 
+    
     <!--Make a Quiz Section-->
     <div>
         
@@ -151,22 +152,45 @@
 
         <!--take mode - quiz main page-->
         <div class="div7" ng-show="vm.showQuizMainPage">
-
+            <br />
             <div class="div8">
-
-                <label class="textArea2">{{vm.question.text}}</label>
-
+                <br />
+                {{vm.question.text}}
             </div>
 
             <div class="div9">
 
-                ANSWERS...
+                <table>
+                    <tr>
+                        <td><input type="button" ng-class="{0:'btn btn-danger btn2', 1:'btn btn-warning btn2'}[vm.answer1BtnStyle]" value={{vm.answer1}} ng-model="vm.answer1" ng-click="vm.answer1Clicked()" /></td>
+                        <td><input type="button" ng-class="{0:'btn btn-danger btn2', 1:'btn btn-warning btn2'}[vm.answer2BtnStyle]" value={{vm.answer2}} ng-model="vm.answer2" ng-click="vm.answer2Clicked()" /></td>
+                        <td><input type="button" ng-class="{0:'btn btn-danger btn2', 1:'btn btn-warning btn2'}[vm.answer3BtnStyle]" value={{vm.answer3}} ng-model="vm.answer3" ng-click="vm.answer3Clicked()" /></td>
+                        <td><input type="button" ng-class="{0:'btn btn-danger btn2', 1:'btn btn-warning btn2'}[vm.answer4BtnStyle]" value={{vm.answer4}} ng-model="vm.answer4" ng-click="vm.answer4Clicked()" /></td>
 
+                          
+                    </tr>
+                   
+                </table>
+                <div>
+                    <input type="button" class="btn btn-danger btn3" value={{vm.nextButtonText}} ng-click="vm.nextBtnClick()" />
+                </div>
             </div>
 
 
 
         </div> <!--end of the quiz main page-->
+
+
+        <!--take mode -quiz result section-->
+
+        <div class="div7" ng-show="vm.showQuizResult" >
+            <br />
+            <div class="div10">
+                <br />
+                Quiz Result : {{vm.quizResult}}% out of 100%
+
+            </div>
+        </div>
 
     </div> <!--end of the Take a Quiz Section-->
 
