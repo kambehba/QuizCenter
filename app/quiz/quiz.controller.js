@@ -159,7 +159,7 @@
         vm.nextBtnClick = function () {
             UnselectAllAnswerButtons();
             hideAllPageSection();
-            if (isSelectedAnswerCorrect == true) {
+            if (isSelectedAnswerCorrect) {
                 isSelectedAnswerCorrect = false;
                 numberOfCorrectlyAnswerd++;
             }
@@ -264,7 +264,7 @@
 
         function showQuizResult() {
             hideAllPageSection();
-            vm.quizResult = (numberOfCorrectlyAnswerd * 100) / questionIds.length
+            vm.quizResult = Math.round((numberOfCorrectlyAnswerd * 100) / questionIds.length)
             vm.showQuizResult = true;
         }
         
