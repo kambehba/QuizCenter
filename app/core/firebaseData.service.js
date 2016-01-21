@@ -29,6 +29,7 @@
             addQuiz: addQuiz,
             addQuestion: addQuestion,
             addAnswer: addAnswer,
+            deleteQuiz: deleteQuiz
 
         });
 
@@ -140,6 +141,19 @@
             return (deferred.promise);
 
 
+        }
+
+        function deleteQuiz(quizId) {
+            var quizRef = new Firebase('https://dazzling-torch-8270.firebaseio.com/QuizCenter/quizes/' + quizId);
+            quizRef.remove();
+           
+            var promise = [];
+            var deferred = $q.defer();
+            quizResource.once('value', function (snapshot) {
+                promise = snapshot.val();
+                deferred.resolve(promise);
+            });
+            return (deferred.promise);
         }
 
         function addQuestion(question, quizId) {

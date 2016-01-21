@@ -134,6 +134,13 @@
             });
         }
 
+        vm.DeleteQuiz = function(quizId){
+            firebaseDataService.deleteQuiz(quizId).then(function (promise) {
+
+                loadAllQuizez(appMode);
+            })
+        }
+
         vm.goToAddNewQuestion = function () {
             hideAllPageSection();
             vm.showAddNewQuestion = true;
@@ -143,7 +150,14 @@
         vm.goToAddNewAnswer = function () {
             hideAllPageSection();
             vm.showAddNewAnswer = true;
+            vm.answer.text = "";
+            vm.answer.isCorrectAnswer = false;
 
+        }
+
+        vm.goToQuestionList = function () {
+            hideAllPageSection();
+            vm.showQuestionList = true;
         }
 
         vm.AddNewAnswer = function () {
@@ -151,7 +165,7 @@
             vm.showAnswerList = true;
 
             firebaseDataService.addAnswer(vm.answer, vm.quiz.id, vm.question.id).then(function (promise) {
-                loadAnswersByQuestionId(vm.quiz.id, vm.question.id);
+                loadAnswers(vm.quiz.id, vm.question.id);
 
             });
         }
@@ -169,6 +183,11 @@
             if (IsLastQuestion()) { vm.nextButtonText = "Finish"; }
 
             loadQuestion();
+        }
+
+        vm.goToMakeQuizMainPage = function () {
+            hideAllPageSection();
+            vm.showStartPage = true;
         }
 
 
@@ -190,9 +209,10 @@
             });
         }
 
-        function loadAnswersByQuestionId(quizId, questionId) {
+        function loadAnswers(quizId, questionId) {
             firebaseDataService.getAnswersByQuestionId(quizId, questionId).then(function (promise) {
                 vm.answers = promise;
+                
             });
         }
 
@@ -219,14 +239,14 @@
                 firebaseDataService.getQuestionById(vm.quiz.id, questionId).then(function (promise) {
                     vm.question = promise;
                     currentQuestionNumber += 1;
-                    loadAnswersByQuestionId(questionId);
+                    loadAndBindAnswers(questionId);
 
                 });
 
             }
         }
 
-        function loadAnswersByQuestionId(questionId) {
+        function loadAndBindAnswers(questionId) {
 
             firebaseDataService.getAnswersByQuestionId(vm.quiz.id, questionId).then(function (promise) {
                 vm.answers = promise;
